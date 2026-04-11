@@ -17,6 +17,8 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   songs        Song[]
+
+  @@map("users")
 }
 
 model Category {
@@ -27,6 +29,8 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   songs     Song[]
+
+  @@map("categories")
 }
 
 model Tag {
@@ -35,6 +39,8 @@ model Tag {
   slug      String    @unique
   createdAt DateTime  @default(now())
   songTags  SongTag[]
+
+  @@map("tags")
 }
 
 model Song {
@@ -57,6 +63,7 @@ model Song {
 
   @@index([authorId])
   @@index([categoryId])
+  @@map("songs")
 }
 
 model SongTag {
@@ -66,4 +73,5 @@ model SongTag {
   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([songId, tagId])
+  @@map("song_tags")
 }
