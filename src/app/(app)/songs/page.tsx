@@ -27,7 +27,21 @@ export default async function SongsPage({ searchParams }: PageProps) {
   const skip = (page - 1) * limit
 
   const where = {
-    ...(search ? { OR: [{ title: { contains: search } }, { artist: { contains: search } }] } : {}),
+    // Own songs OR public songs from others
+    OR: [
+      { authorId: session?.user.id },
+      { isPublic: true },
+    ],
+    ...(search
+      ? {
+          AND: [{
+            OR: [
+              { title: { contains: search, mode: "insensitive" as const } },
+              { artist: { contains: search, mode: "insensitive" as const } },
+            ],
+          }],
+        }
+      : {}),
     ...(categoryId ? { categoryId } : {}),
     ...(tagId ? { songTags: { some: { tagId } } } : {}),
   }
@@ -49,7 +63,7 @@ export default async function SongsPage({ searchParams }: PageProps) {
     prisma.tag.findMany({ orderBy: { name: "asc" } }),
   ])
 
-  const canCreate = session?.user.role === "EDITOR" || session?.user.role === "ADMIN"
+  const canCreate = !!session?.user
   const totalPages = Math.ceil(total / limit)
 
   return (

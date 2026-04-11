@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils"
-import { Music, Clock, Hash } from "lucide-react"
+import { Music, Clock, Hash, GitFork } from "lucide-react"
 
 interface SongCardProps {
   song: {
@@ -10,14 +10,19 @@ interface SongCardProps {
     artist?: string | null
     key?: string | null
     tempo?: number | null
+    version: number
+    sourceId?: string | null
     category?: { name: string; color: string } | null
     songTags: { tag: { name: string } }[]
     updatedAt: string | Date
-    author: { name?: string | null }
+    author: { name?: string | null; email: string }
   }
 }
 
 export function SongCard({ song }: SongCardProps) {
+  const isVersion = song.version > 1 && !!song.sourceId
+  const authorLabel = song.author.name || song.author.email.split("@")[0]
+
   return (
     <Link
       href={`/songs/${song.id}`}
@@ -37,11 +42,20 @@ export function SongCard({ song }: SongCardProps) {
             )}
           </div>
         </div>
-        {song.key && (
-          <span className="flex-shrink-0 rounded-md border border-indigo-500/40 bg-indigo-600/10 px-2 py-0.5 text-xs font-mono font-bold text-indigo-400">
-            {song.key}
-          </span>
-        )}
+
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {isVersion && (
+            <span className="flex items-center gap-1 rounded-md border border-amber-500/40 bg-amber-600/10 px-1.5 py-0.5 text-xs font-mono font-bold text-amber-400">
+              <GitFork className="h-2.5 w-2.5" />
+              v{song.version}
+            </span>
+          )}
+          {song.key && (
+            <span className="rounded-md border border-indigo-500/40 bg-indigo-600/10 px-2 py-0.5 text-xs font-mono font-bold text-indigo-400">
+              {song.key}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-1.5">
@@ -65,6 +79,7 @@ export function SongCard({ song }: SongCardProps) {
           {formatDate(song.updatedAt)}
         </span>
         {song.tempo && <span>{song.tempo} BPM</span>}
+        <span className="ml-auto truncate">{authorLabel}</span>
       </div>
     </Link>
   )

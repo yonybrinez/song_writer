@@ -9,7 +9,7 @@ import { ExportMenu } from "./export-menu"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toaster"
-import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy } from "lucide-react"
+import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy, GitFork } from "lucide-react"
 import { ClientDate } from "@/components/ui/client-date"
 
 interface Song {
@@ -23,6 +23,9 @@ interface Song {
   notes?: string | null
   isPublic: boolean
   allowEdits: boolean
+  version: number
+  sourceId?: string | null
+  source?: { id: string; title: string; author: { name?: string | null; email: string } } | null
   createdAt: string
   updatedAt: string
   category?: { name: string; color: string } | null
@@ -153,6 +156,31 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy }: SongViewPage
 
       {/* Song content */}
       <div className="flex-1 px-6 py-6 max-w-4xl mx-auto w-full">
+        {/* Version lineage banner */}
+        {song.version > 1 && song.sourceId && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-600/5 px-4 py-2.5 no-print">
+            <GitFork className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+            <span className="text-xs text-amber-300">
+              Version {song.version} by {song.author.name || song.author.email.split("@")[0]}
+            </span>
+            {song.source && (
+              <>
+                <span className="text-xs text-amber-500">·</span>
+                <span className="text-xs text-amber-500">Original:</span>
+                <a
+                  href={`/songs/${song.source.id}`}
+                  className="text-xs text-amber-400 hover:text-amber-200 underline underline-offset-2 transition-colors"
+                >
+                  {song.source.title}
+                </a>
+                <span className="text-xs text-amber-500">
+                  by {song.source.author.name || song.source.author.email.split("@")[0]}
+                </span>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Metadata */}
         <div className="mb-6 flex flex-wrap items-center gap-2 no-print">
           {song.category && (

@@ -17,6 +17,13 @@ export default async function SongPage({ params }: PageProps) {
       author: { select: { id: true, name: true, email: true } },
       category: true,
       songTags: { include: { tag: true } },
+      source: {
+        select: {
+          id: true,
+          title: true,
+          author: { select: { name: true, email: true } },
+        },
+      },
     },
   })
 
