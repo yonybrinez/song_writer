@@ -22,9 +22,12 @@ export default async function SongPage({ params }: PageProps) {
 
   if (!song) notFound()
 
-  const canEdit =
-    session?.user.role === "ADMIN" ||
-    (session?.user.role === "EDITOR" && song.authorId === session.user.id)
+  const isOwner = session?.user.id === song.authorId
+  const isAdmin = session?.user.role === "ADMIN"
+
+  const canEdit = isOwner || isAdmin || (song.isPublic && song.allowEdits)
+  const canDelete = isOwner || isAdmin
+  const canCopy = !isOwner && song.isPublic
 
   return (
     <SongViewPage
@@ -34,7 +37,8 @@ export default async function SongPage({ params }: PageProps) {
         updatedAt: song.updatedAt.toISOString(),
       }}
       canEdit={canEdit}
-      userId={session?.user.id}
+      canDelete={canDelete}
+      canCopy={canCopy}
     />
   )
 }

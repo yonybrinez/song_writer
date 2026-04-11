@@ -9,9 +9,8 @@ import { ExportMenu } from "./export-menu"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toaster"
-import { ArrowLeft, Edit, Trash2, Minus, Plus } from "lucide-react"
+import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy } from "lucide-react"
 import { ClientDate } from "@/components/ui/client-date"
-import { cn } from "@/lib/utils"
 
 interface Song {
   id: string
@@ -22,6 +21,8 @@ interface Song {
   timeSignature?: string | null
   content: string
   notes?: string | null
+  isPublic: boolean
+  allowEdits: boolean
   createdAt: string
   updatedAt: string
   category?: { name: string; color: string } | null
@@ -32,15 +33,17 @@ interface Song {
 interface SongViewPageProps {
   song: Song
   canEdit: boolean
-  userId?: string
+  canDelete: boolean
+  canCopy: boolean
 }
 
-export function SongViewPage({ song, canEdit, userId }: SongViewPageProps) {
+export function SongViewPage({ song, canEdit, canDelete, canCopy }: SongViewPageProps) {
   const router = useRouter()
   const [currentContent, setCurrentContent] = useState(song.content)
   const [currentKey, setCurrentKey] = useState(song.key ?? undefined)
   const [fontSize, setFontSize] = useState(16)
   const [deleting, setDeleting] = useState(false)
+  const [copying, setCopying] = useState(false)
 
   function handleTransposed(content: string, key: string | undefined) {
     if (content) {
@@ -64,6 +67,21 @@ export function SongViewPage({ song, canEdit, userId }: SongViewPageProps) {
     } catch {
       toast("Failed to delete", "error")
       setDeleting(false)
+    }
+  }
+
+  async function handleCopy() {
+    setCopying(true)
+    try {
+      const res = await fetch(`/api/songs/${song.id}/copy`, { method: "POST" })
+      if (!res.ok) throw new Error()
+      const { song: copy } = await res.json()
+      toast("Song copied to your library", "success")
+      router.push(`/songs/${copy.id}/edit`)
+      router.refresh()
+    } catch {
+      toast("Failed to copy song", "error")
+      setCopying(false)
     }
   }
 
@@ -109,23 +127,26 @@ export function SongViewPage({ song, canEdit, userId }: SongViewPageProps) {
 
           <ExportMenu songId={song.id} songTitle={song.title} content={currentContent} />
 
+          {canCopy && (
+            <Button size="sm" variant="secondary" onClick={handleCopy} loading={copying}>
+              <Copy className="h-3.5 w-3.5" />
+              Copy
+            </Button>
+          )}
+
           {canEdit && (
-            <>
-              <Link href={`/songs/${song.id}/edit`}>
-                <Button size="sm" variant="secondary">
-                  <Edit className="h-3.5 w-3.5" />
-                  Edit
-                </Button>
-              </Link>
-              <Button
-                size="sm"
-                variant="danger"
-                onClick={handleDelete}
-                loading={deleting}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
+            <Link href={`/songs/${song.id}/edit`}>
+              <Button size="sm" variant="secondary">
+                <Edit className="h-3.5 w-3.5" />
+                Edit
               </Button>
-            </>
+            </Link>
+          )}
+
+          {canDelete && (
+            <Button size="sm" variant="danger" onClick={handleDelete} loading={deleting}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
           )}
         </div>
       </div>
@@ -146,6 +167,16 @@ export function SongViewPage({ song, canEdit, userId }: SongViewPageProps) {
           {song.timeSignature && (
             <span className="text-xs text-slate-600">{song.timeSignature}</span>
           )}
+          {song.isPublic && song.allowEdits && (
+            <span className="text-xs text-emerald-600 border border-emerald-700/40 rounded px-1.5 py-0.5">
+              Open for edits
+            </span>
+          )}
+          {song.isPublic && !song.allowEdits && (
+            <span className="text-xs text-slate-600 border border-slate-700/40 rounded px-1.5 py-0.5">
+              Public
+            </span>
+          )}
           <ClientDate
             date={song.updatedAt}
             prefix="Updated "
@@ -160,8 +191,8 @@ export function SongViewPage({ song, canEdit, userId }: SongViewPageProps) {
           className="print:text-black"
         />
 
-        {/* Notes */}
-        {song.notes && canEdit && (
+        {/* Notes — only visible to the owner */}
+        {song.notes && canDelete && (
           <div className="mt-8 rounded-lg border border-slate-800 bg-slate-900/50 p-4 no-print">
             <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Private notes</p>
             <p className="text-sm text-slate-400 whitespace-pre-wrap">{song.notes}</p>
