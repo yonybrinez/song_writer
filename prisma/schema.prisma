@@ -53,6 +53,7 @@ model Song {
   content       String    @default("")
   notes         String?
   isPublic      Boolean   @default(false)
+  allowEdits    Boolean   @default(false)
   authorId      String
   categoryId    String?
   createdAt     DateTime  @default(now())

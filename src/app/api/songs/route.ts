@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { requireRole } from "@/lib/auth-helpers"
+import { requireAuth } from "@/lib/auth-helpers"
 import { songSchema } from "@/lib/validations"
 import { slugify } from "@/lib/utils"
 
 export async function GET(req: NextRequest) {
-  const result = await requireRole("VIEWER")
+  const result = await requireAuth()
   if ("error" in result) return result.error
+  const { session } = result
 
   const { searchParams } = new URL(req.url)
   const search = searchParams.get("search") ?? ""
@@ -17,11 +18,20 @@ export async function GET(req: NextRequest) {
   const skip = (page - 1) * limit
 
   const where = {
+    // Own songs OR public songs from others
+    OR: [
+      { authorId: session.user.id },
+      { isPublic: true },
+    ],
     ...(search
       ? {
-          OR: [
-            { title: { contains: search } },
-            { artist: { contains: search } },
+          AND: [
+            {
+              OR: [
+                { title: { contains: search, mode: "insensitive" as const } },
+                { artist: { contains: search, mode: "insensitive" as const } },
+              ],
+            },
           ],
         }
       : {}),
@@ -48,7 +58,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const result = await requireRole("EDITOR")
+  const result = await requireAuth()
   if ("error" in result) return result.error
   const { session } = result
 
@@ -61,7 +71,6 @@ export async function POST(req: NextRequest) {
 
     const { tagIds, ...data } = parsed.data
 
-    // Upsert tags
     const tagRecords = await Promise.all(
       tagIds.map((name) =>
         prisma.tag.upsert({

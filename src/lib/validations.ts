@@ -20,6 +20,7 @@ export const songSchema = z.object({
   content: z.string().default(""),
   notes: z.string().optional(),
   isPublic: z.boolean().default(false),
+  allowEdits: z.boolean().default(false),
   categoryId: z.string().optional().nullable(),
   tagIds: z.array(z.string()).default([]),
 })

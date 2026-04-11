@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
-import { Music, LayoutGrid, Tag, Users, LogOut, ChevronRight } from "lucide-react"
+import { Music, LayoutGrid, Users, LogOut, ChevronRight, HelpCircle } from "lucide-react"
 
 interface SidebarProps {
   userRole: string
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/songs", label: "Songs", icon: Music, roles: ["VIEWER", "EDITOR", "ADMIN"] },
   { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["ADMIN"] },
   { href: "/admin/users", label: "Users", icon: Users, roles: ["ADMIN"] },
+  { href: "/help", label: "Help", icon: HelpCircle, roles: ["VIEWER", "EDITOR", "ADMIN"] },
 ]
 
 export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
