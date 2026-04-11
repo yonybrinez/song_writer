@@ -105,10 +105,22 @@ export function SongEditor({ value, onChange, className }: SongEditorProps) {
       )}
 
       {/* Content area */}
-      <div className={cn("flex-1 flex min-h-0", mode === "split" && "divide-x divide-slate-800")}>
+      <div
+        className={cn(
+          "flex-1 min-h-0",
+          mode === "split"
+            ? "flex flex-col sm:flex-row divide-y divide-slate-800 sm:divide-y-0 sm:divide-x sm:divide-slate-800"
+            : "flex"
+        )}
+      >
         {/* Editor pane */}
         {(mode === "edit" || mode === "split") && (
-          <div className={cn("flex flex-col", mode === "split" ? "w-1/2" : "w-full")}>
+          <div
+            className={cn(
+              "flex flex-col",
+              mode === "split" ? "h-1/2 sm:h-auto w-full sm:w-1/2" : "w-full"
+            )}
+          >
             <div className="px-3 py-1.5 text-xs text-slate-600 border-b border-slate-800/50 font-mono no-print">
               ChordPro source · <kbd className="bg-slate-800 px-1 rounded text-slate-500">Ctrl+[</kbd> inserts chord
             </div>
@@ -130,7 +142,12 @@ export function SongEditor({ value, onChange, className }: SongEditorProps) {
 
         {/* Preview pane */}
         {(mode === "preview" || mode === "split") && (
-          <div className={cn("flex flex-col overflow-y-auto", mode === "split" ? "w-1/2" : "w-full")}>
+          <div
+            className={cn(
+              "flex flex-col overflow-y-auto",
+              mode === "split" ? "h-1/2 sm:h-auto w-full sm:w-1/2" : "w-full"
+            )}
+          >
             <div className="px-3 py-1.5 text-xs text-slate-600 border-b border-slate-800/50 no-print">
               Live preview
             </div>

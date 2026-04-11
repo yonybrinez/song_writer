@@ -111,10 +111,10 @@ export function SongForm({ songId, initialData, categories }: SongFormProps) {
   return (
     <div className="flex flex-col h-screen">
       {/* Top bar */}
-      <div className="flex items-center gap-3 border-b border-slate-800 bg-slate-900/50 px-4 py-3 no-print">
+      <div className="flex items-center gap-2 border-b border-slate-800 bg-slate-900/50 px-4 py-3 no-print flex-wrap">
         <button
           onClick={() => router.back()}
-          className="text-slate-500 hover:text-slate-300 transition-colors"
+          className="text-slate-500 hover:text-slate-300 transition-colors flex-shrink-0"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -123,26 +123,31 @@ export function SongForm({ songId, initialData, categories }: SongFormProps) {
           value={form.title}
           onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
           placeholder="Song title..."
-          className="flex-1 bg-transparent text-lg font-semibold text-slate-100 placeholder:text-slate-600 focus:outline-none"
+          className="flex-1 min-w-0 bg-transparent text-base sm:text-lg font-semibold text-slate-100 placeholder:text-slate-600 focus:outline-none"
         />
 
         {/* Tabs */}
-        <div className="flex rounded-lg border border-slate-700 overflow-hidden">
+        <div className="flex rounded-lg border border-slate-700 overflow-hidden flex-shrink-0">
           {(["lyrics", "meta"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={cn(
-                "px-3 py-1.5 text-xs font-medium transition-colors capitalize",
+                "px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors",
                 activeTab === tab ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
               )}
             >
-              {tab === "lyrics" ? "Lyrics & Chords" : "Details"}
+              {tab === "lyrics" ? (
+                <>
+                  <span className="hidden sm:inline">Lyrics & Chords</span>
+                  <span className="sm:hidden">Lyrics</span>
+                </>
+              ) : "Details"}
             </button>
           ))}
         </div>
 
-        <Button onClick={handleSave} loading={saving} size="sm">
+        <Button onClick={handleSave} loading={saving} size="sm" className="flex-shrink-0">
           <Save className="h-3.5 w-3.5" />
           {isEditing ? "Update" : "Save"}
         </Button>
@@ -161,7 +166,7 @@ export function SongForm({ songId, initialData, categories }: SongFormProps) {
               placeholder="Artist name"
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Select
                 label="Key"
                 value={form.key}

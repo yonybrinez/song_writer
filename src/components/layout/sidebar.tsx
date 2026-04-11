@@ -4,12 +4,13 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
-import { Music, LayoutGrid, Users, LogOut, ChevronRight, HelpCircle } from "lucide-react"
+import { Music, LayoutGrid, Users, LogOut, ChevronRight, HelpCircle, X } from "lucide-react"
 
 interface SidebarProps {
   userRole: string
   userName: string
   userEmail: string
+  onClose?: () => void
 }
 
 const navItems = [
@@ -19,13 +20,23 @@ const navItems = [
   { href: "/help", label: "Help", icon: HelpCircle, roles: ["VIEWER", "EDITOR", "ADMIN"] },
 ]
 
-export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
+export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps) {
   const pathname = usePathname()
 
   return (
     <aside className="flex h-full w-64 flex-col border-r border-slate-800 bg-slate-900">
       {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-800">
+        {/* Mobile close button */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="lg:hidden absolute top-4 right-4 flex items-center justify-center h-7 w-7 rounded-md text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors"
+            aria-label="Close navigation"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600">
           <Music className="h-5 w-5 text-white" />
         </div>
