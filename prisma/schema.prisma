@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         String   @default("VIEWER")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  songs        Song[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  color     String   @default("#6366f1")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  songs     Song[]
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  songTags  SongTag[]
+}
+
+model Song {
+  id            String    @id @default(cuid())
+  title         String
+  artist        String?
+  key           String?
+  tempo         Int?
+  timeSignature String?
+  content       String    @default("")
+  notes         String?
+  isPublic      Boolean   @default(false)
+  authorId      String
+  categoryId    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  songTags      SongTag[]
+
+  @@index([authorId])
+  @@index([categoryId])
+}
+
+model SongTag {
+  songId String
+  tagId  String
+  song   Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([songId, tagId])
+}
