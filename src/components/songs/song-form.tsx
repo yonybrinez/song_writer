@@ -151,7 +151,7 @@ export function SongForm({ songId, initialData, categories, isOwner = true }: So
   return (
     <div className="flex flex-col h-screen">
       {/* Top bar */}
-      <div className="flex items-center gap-2 border-b border-slate-800 bg-slate-900/50 px-4 py-3 no-print flex-wrap">
+      <div className="flex items-center gap-2 border-b border-slate-200 bg-white px-4 py-3 no-print flex-wrap dark:border-slate-800 dark:bg-slate-900/50">
         <button
           onClick={() => router.back()}
           className="text-slate-500 hover:text-slate-300 transition-colors flex-shrink-0"
@@ -163,18 +163,18 @@ export function SongForm({ songId, initialData, categories, isOwner = true }: So
           value={form.title}
           onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
           placeholder="Song title..."
-          className="flex-1 min-w-0 bg-transparent text-base sm:text-lg font-semibold text-slate-100 placeholder:text-slate-600 focus:outline-none"
+          className="flex-1 min-w-0 bg-transparent text-base sm:text-lg font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-slate-100 dark:placeholder:text-slate-600"
         />
 
         {/* Tabs */}
-        <div className="flex rounded-lg border border-slate-700 overflow-hidden flex-shrink-0">
+        <div className="flex rounded-lg border border-slate-300 overflow-hidden flex-shrink-0 dark:border-slate-700">
           {(["lyrics", "meta"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={cn(
                 "px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors",
-                activeTab === tab ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                activeTab === tab ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800"
               )}
             >
               {tab === "lyrics" ? (
@@ -326,7 +326,7 @@ export function SongForm({ songId, initialData, categories, isOwner = true }: So
                 <button
                   type="button"
                   onClick={addLink}
-                  className="flex items-center justify-center h-9 w-9 rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-200 hover:border-indigo-500 transition-colors flex-shrink-0"
+                  className="flex items-center justify-center h-9 w-9 rounded-lg border border-slate-300 bg-white text-slate-500 hover:text-slate-900 hover:border-indigo-500 transition-colors flex-shrink-0 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
                   title="Add link"
                 >
                   <Plus className="h-4 w-4" />

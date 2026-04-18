@@ -94,14 +94,14 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top bar */}
-      <div className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/95 backdrop-blur-sm px-4 sm:px-6 py-3 no-print">
+      <div className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 sm:px-6 py-3 no-print dark:border-slate-800 dark:bg-slate-950/95">
         <div className="flex items-center gap-3 flex-wrap">
           <Link href="/songs" className="text-slate-500 hover:text-slate-300 transition-colors">
             <ArrowLeft className="h-5 w-5" />
           </Link>
 
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-semibold text-slate-100 truncate">{song.title}</h1>
+            <h1 className="text-base font-semibold text-slate-900 dark:text-slate-100 truncate">{song.title}</h1>
             {song.artist && <p className="text-xs text-slate-500">{song.artist}</p>}
           </div>
 
@@ -115,10 +115,10 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
           )}
 
           {/* Font size */}
-          <div className="flex items-center gap-1 rounded-lg border border-slate-700 overflow-hidden">
+          <div className="flex items-center gap-1 rounded-lg border border-slate-300 overflow-hidden dark:border-slate-700">
             <button
               onClick={() => setFontSize((s) => Math.max(12, s - 2))}
-              className="px-2 py-1.5 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors"
+              className="px-2 py-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors dark:hover:text-slate-300 dark:hover:bg-slate-800"
               title="Decrease font size"
             >
               <Minus className="h-3 w-3" />
@@ -126,7 +126,7 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
             <span className="px-2 text-xs text-slate-500 font-mono">{fontSize}px</span>
             <button
               onClick={() => setFontSize((s) => Math.min(28, s + 2))}
-              className="px-2 py-1.5 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors"
+              className="px-2 py-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors dark:hover:text-slate-300 dark:hover:bg-slate-800"
               title="Increase font size"
             >
               <Plus className="h-3 w-3" />
@@ -197,10 +197,10 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
             <Badge key={st.tag.name} variant="outline"># {st.tag.name}</Badge>
           ))}
           {song.tempo && (
-            <span className="text-xs text-slate-600">{song.tempo} BPM</span>
+            <span className="text-xs text-slate-500 dark:text-slate-600">{song.tempo} BPM</span>
           )}
           {song.timeSignature && (
-            <span className="text-xs text-slate-600">{song.timeSignature}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-600">{song.timeSignature}</span>
           )}
           {song.isPublic && song.allowEdits && (
             <span className="text-xs text-emerald-600 border border-emerald-700/40 rounded px-1.5 py-0.5">
@@ -249,10 +249,10 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
                     ].join(" ")}
                   >
                     <span className={`text-xs font-semibold ${cfg.color}`}>{cfg.label}</span>
-                    <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors max-w-[180px] truncate">
+                    <span className="text-xs text-slate-500 group-hover:text-slate-700 transition-colors max-w-[180px] truncate dark:text-slate-400 dark:group-hover:text-slate-200">
                       {link.label || formatDisplayUrl(link.url)}
                     </span>
-                    <ExternalLink className="h-3 w-3 text-slate-600 flex-shrink-0" />
+                    <ExternalLink className="h-3 w-3 text-slate-400 flex-shrink-0 dark:text-slate-600" />
                   </a>
                 )
               })}
@@ -262,9 +262,9 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
 
         {/* Notes — only visible to the owner */}
         {song.notes && canDelete && (
-          <div className="mt-8 rounded-lg border border-slate-800 bg-slate-900/50 p-4 no-print">
+          <div className="mt-8 rounded-lg border border-slate-200 bg-slate-50/50 p-4 no-print dark:border-slate-800 dark:bg-slate-900/50">
             <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Private notes</p>
-            <p className="text-sm text-slate-400 whitespace-pre-wrap">{song.notes}</p>
+            <p className="text-sm text-slate-600 whitespace-pre-wrap dark:text-slate-400">{song.notes}</p>
           </div>
         )}
 

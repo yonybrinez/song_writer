@@ -60,7 +60,7 @@ export function AppLayoutClient({ userRole, userName, userEmail, children }: App
       {/* Main content */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <MobileHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto bg-slate-950">
+        <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950">
           {children}
         </main>
       </div>

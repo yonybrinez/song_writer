@@ -14,13 +14,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || loading}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed",
+          "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed",
           {
             "bg-indigo-600 text-white hover:bg-indigo-500 active:bg-indigo-700": variant === "primary",
-            "bg-slate-700 text-slate-200 hover:bg-slate-600 active:bg-slate-800": variant === "secondary",
-            "text-slate-300 hover:text-white hover:bg-slate-800 active:bg-slate-700": variant === "ghost",
+            "bg-slate-200 text-slate-800 hover:bg-slate-300 active:bg-slate-100 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 dark:active:bg-slate-800": variant === "secondary",
+            "text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 dark:active:bg-slate-700": variant === "ghost",
             "bg-red-600 text-white hover:bg-red-500 active:bg-red-700": variant === "danger",
-            "border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-slate-100 hover:bg-slate-800": variant === "outline",
+            "border border-slate-300 text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:border-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-800": variant === "outline",
           },
           {
             "px-2.5 py-1.5 text-xs": size === "sm",

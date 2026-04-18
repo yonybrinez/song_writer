@@ -40,19 +40,19 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600">
             <Music className="h-6 w-6 text-white" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-slate-100">ChordSheet</h1>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">ChordSheet</h1>
             <p className="mt-1 text-sm text-slate-500">Sign in to your account</p>
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
               {...register("email")}

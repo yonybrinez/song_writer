@@ -10,14 +10,28 @@ export const metadata: Metadata = {
   description: "Manage your song lyrics and chords beautifully",
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+// Inline script prevents flash of wrong theme before React hydrates
+const themeScript = `
+(function(){
+  try{
+    var t=localStorage.getItem('theme');
+    var dark=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList.toggle('dark',dark);
+    document.documentElement.style.colorScheme=dark?'dark':'light';
+  }catch(e){}
+})();
+`
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="h-full dark">
-      <body className={`${inter.className} min-h-full bg-slate-950 text-slate-200 antialiased`} suppressHydrationWarning>
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body
+        className={`${inter.className} min-h-full bg-background text-foreground antialiased`}
+        suppressHydrationWarning
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

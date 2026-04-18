@@ -69,10 +69,10 @@ export default async function SongsPage({ searchParams }: PageProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="border-b border-slate-800 bg-slate-900/50 px-6 py-4">
+      <div className="border-b border-slate-200 bg-white px-6 py-4 dark:border-slate-800 dark:bg-slate-900/50">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-lg font-semibold text-slate-100">Songs</h1>
+            <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Songs</h1>
             <p className="text-xs text-slate-500">{total} {total === 1 ? "song" : "songs"}</p>
           </div>
           {canCreate && (
@@ -99,12 +99,12 @@ export default async function SongsPage({ searchParams }: PageProps) {
       <div className="flex-1 overflow-y-auto px-6 py-4">
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-800 border border-slate-700">
-              <Music className="h-7 w-7 text-slate-600" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
+              <Music className="h-7 w-7 text-slate-400 dark:text-slate-600" />
             </div>
             <div>
-              <p className="text-slate-400 font-medium">No songs yet</p>
-              <p className="text-sm text-slate-600 mt-1">
+              <p className="text-slate-600 font-medium dark:text-slate-400">No songs yet</p>
+              <p className="text-sm text-slate-400 mt-1 dark:text-slate-600">
                 {search ? "Try a different search" : canCreate ? "Create your first song to get started" : "No songs available"}
               </p>
             </div>
@@ -141,7 +141,7 @@ export default async function SongsPage({ searchParams }: PageProps) {
                 className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                   p === page
                     ? "bg-indigo-600 text-white"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800"
                 }`}
               >
                 {p}

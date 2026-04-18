@@ -26,7 +26,7 @@ export function SongCard({ song }: SongCardProps) {
   return (
     <Link
       href={`/songs/${song.id}`}
-      className="group flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4 hover:border-indigo-500/50 hover:bg-slate-800/80 transition-all duration-200"
+      className="group flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 hover:border-indigo-400/50 hover:bg-slate-50/80 transition-all duration-200 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-500/50 dark:hover:bg-slate-800/80"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -34,7 +34,7 @@ export function SongCard({ song }: SongCardProps) {
             <Music className="h-4 w-4 text-indigo-400" />
           </div>
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">
+            <h3 className="truncate text-sm font-semibold text-slate-800 group-hover:text-slate-900 transition-colors dark:text-slate-200 dark:group-hover:text-white">
               {song.title}
             </h3>
             {song.artist && (
@@ -73,7 +73,7 @@ export function SongCard({ song }: SongCardProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-3 text-xs text-slate-600">
+      <div className="flex items-center gap-3 text-xs text-slate-400 dark:text-slate-600">
         <span className="flex items-center gap-1">
           <Clock className="h-3 w-3" />
           {formatDate(song.updatedAt)}

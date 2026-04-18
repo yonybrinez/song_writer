@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
+/* Class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Light mode (default) ─────────────────────────── */
 :root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #e2e8f0;
+  --chord-color: #4f46e5;
+  --section-color: #64748b;
+  --muted: #94a3b8;
+}
+
+/* ─── Dark mode ─────────────────────────────────────── */
+.dark {
   --background: #0f172a;
   --foreground: #e2e8f0;
   --surface: #1e293b;
@@ -14,6 +30,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-app-border: var(--border);
+  --color-muted: var(--muted);
 }
 
 * {
@@ -21,6 +41,9 @@
 }
 
 html {
+  color-scheme: light;
+}
+html.dark {
   color-scheme: dark;
 }
 
@@ -32,23 +55,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* ─── Scrollbar ─────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: var(--surface-2);
 }
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--muted);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: var(--section-color);
 }
 
-/* Chord viewer styles */
+/* ─── Chord viewer ──────────────────────────────────── */
 .chord-line {
   display: flex;
   flex-wrap: wrap;
@@ -88,28 +111,36 @@ body {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border);
 }
 
-/* Animation */
+/* ─── Animation ─────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
   animation: fadeIn 0.2s ease-out;
 }
 
+/* ─── Print / Export ────────────────────────────────── */
 @media print {
+  :root {
+    --background: #ffffff;
+    --foreground: #1e293b;
+    --chord-color: #4f46e5;
+    --section-color: #64748b;
+    --border: #e2e8f0;
+  }
+  html, html.dark {
+    color-scheme: light;
+  }
   body {
-    background: white;
-    color: #1e293b;
+    background: white !important;
+    color: #1e293b !important;
   }
   .no-print {
     display: none !important;
-  }
-  .chord-name {
-    color: #4f46e5 !important;
   }
 }

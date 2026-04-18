@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { Music, LayoutGrid, Users, LogOut, ChevronRight, HelpCircle, X, UserCircle } from "lucide-react"
 
 interface SidebarProps {
@@ -25,14 +26,14 @@ export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps
   const pathname = usePathname()
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-slate-800 bg-slate-900">
+    <aside className="flex h-full w-64 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-800">
+      <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-200 dark:border-slate-800">
         {/* Mobile close button */}
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden absolute top-4 right-4 flex items-center justify-center h-7 w-7 rounded-md text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors"
+            className="lg:hidden absolute top-4 right-4 flex items-center justify-center h-7 w-7 rounded-md text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-800 transition-colors"
             aria-label="Close navigation"
           >
             <X className="h-4 w-4" />
@@ -42,7 +43,7 @@ export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps
           <Music className="h-5 w-5 text-white" />
         </div>
         <div>
-          <div className="text-sm font-bold text-slate-100">ChordSheet</div>
+          <div className="text-sm font-bold text-slate-900 dark:text-slate-100">ChordSheet</div>
           <div className="text-xs text-slate-500">Song Manager</div>
         </div>
       </div>
@@ -61,11 +62,11 @@ export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all group",
                     active
-                      ? "bg-indigo-600/20 text-indigo-400 border border-indigo-500/30"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                      ? "bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-indigo-600/20 dark:text-indigo-400 dark:border-indigo-500/30"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800"
                   )}
                 >
-                  <item.icon className={cn("h-4 w-4", active ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300")} />
+                  <item.icon className={cn("h-4 w-4", active ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300")} />
                   {item.label}
                   {active && <ChevronRight className="ml-auto h-3 w-3" />}
                 </Link>
@@ -75,28 +76,29 @@ export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps
       </nav>
 
       {/* Footer */}
-      <div className="px-5 pb-2">
+      <div className="px-5 pb-2 flex items-center justify-between">
         <Link
           href="/terms"
-          className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+          className="text-xs text-slate-400 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-400 transition-colors"
         >
           Terms & Conditions
         </Link>
+        <ThemeToggle />
       </div>
 
       {/* User */}
-      <div className="border-t border-slate-800 p-4">
+      <div className="border-t border-slate-200 dark:border-slate-800 p-4">
         <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600/30 border border-indigo-500/40 text-indigo-400 text-xs font-bold flex-shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600/30 border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex-shrink-0">
             {(userName || "U").charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="truncate text-sm font-medium text-slate-200">{userName || "User"}</div>
+            <div className="truncate text-sm font-medium text-slate-800 dark:text-slate-200">{userName || "User"}</div>
             <div className="truncate text-xs text-slate-500">{userRole}</div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="text-slate-500 hover:text-slate-300 transition-colors"
+            className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
             title="Sign out"
           >
             <LogOut className="h-4 w-4" />
