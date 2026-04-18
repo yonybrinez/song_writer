@@ -8,14 +8,18 @@ export default auth((req) => {
   const { nextUrl, auth: session } = req
 
   const isLoggedIn = !!session?.user
+  // Pages that redirect logged-in users away (login/register)
   const isAuthPage =
     nextUrl.pathname.startsWith("/login") ||
-    nextUrl.pathname.startsWith("/register") ||
-    nextUrl.pathname.startsWith("/terms")
+    nextUrl.pathname.startsWith("/register")
+
+  // Public pages accessible by anyone regardless of auth state
+  const isPublicPage = nextUrl.pathname.startsWith("/terms")
   const isApiAuth = nextUrl.pathname.startsWith("/api/auth")
   const isSongView = SONG_VIEW_RE.test(nextUrl.pathname)
 
   if (isApiAuth) return NextResponse.next()
+  if (isPublicPage) return NextResponse.next()
 
   if (isAuthPage) {
     if (isLoggedIn) {
