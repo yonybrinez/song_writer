@@ -28,10 +28,12 @@ interface SongFormProps {
     content: string
     notes: string
     isPublic: boolean
+    allowEdits: boolean
     categoryId: string
     tagIds: string[]
   }
   categories: Category[]
+  isOwner?: boolean
 }
 
 const COMMON_KEYS = [
@@ -41,7 +43,7 @@ const COMMON_KEYS = [
 
 const TIME_SIGNATURES = ["4/4", "3/4", "6/8", "2/4", "12/8", "5/4", "7/8"]
 
-export function SongForm({ songId, initialData, categories }: SongFormProps) {
+export function SongForm({ songId, initialData, categories, isOwner = true }: SongFormProps) {
   const router = useRouter()
   const isEditing = !!songId
 
@@ -54,6 +56,7 @@ export function SongForm({ songId, initialData, categories }: SongFormProps) {
     content: initialData?.content ?? "",
     notes: initialData?.notes ?? "",
     isPublic: initialData?.isPublic ?? false,
+    allowEdits: initialData?.allowEdits ?? false,
     categoryId: initialData?.categoryId ?? "",
     tagIds: initialData?.tagIds ?? [],
   })
@@ -81,6 +84,7 @@ export function SongForm({ songId, initialData, categories }: SongFormProps) {
         content: form.content,
         notes: form.notes || undefined,
         isPublic: form.isPublic,
+        allowEdits: form.allowEdits,
         categoryId: form.categoryId || null,
         tagIds: form.tagIds,
       }
@@ -227,26 +231,56 @@ export function SongForm({ songId, initialData, categories }: SongFormProps) {
               />
             </div>
 
-            <label className="flex items-center gap-3 cursor-pointer">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  checked={form.isPublic}
-                  onChange={(e) => setForm((p) => ({ ...p, isPublic: e.target.checked }))}
-                  className="sr-only"
-                />
-                <div className={cn(
-                  "h-5 w-9 rounded-full transition-colors",
-                  form.isPublic ? "bg-indigo-600" : "bg-slate-700"
-                )}>
-                  <div className={cn(
-                    "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                    form.isPublic ? "translate-x-4" : "translate-x-0.5"
-                  )} />
-                </div>
+            {isOwner && (
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={form.isPublic}
+                      onChange={(e) => {
+                        const isPublic = e.target.checked
+                        setForm((p) => ({ ...p, isPublic, allowEdits: isPublic ? p.allowEdits : false }))
+                      }}
+                      className="sr-only"
+                    />
+                    <div className={cn(
+                      "h-5 w-9 rounded-full transition-colors",
+                      form.isPublic ? "bg-indigo-600" : "bg-slate-700"
+                    )}>
+                      <div className={cn(
+                        "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                        form.isPublic ? "translate-x-4" : "translate-x-0.5"
+                      )} />
+                    </div>
+                  </div>
+                  <span className="text-sm text-slate-300">Public song</span>
+                </label>
+
+                {form.isPublic && (
+                  <label className="flex items-center gap-3 cursor-pointer pl-2 border-l-2 border-slate-700">
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={form.allowEdits}
+                        onChange={(e) => setForm((p) => ({ ...p, allowEdits: e.target.checked }))}
+                        className="sr-only"
+                      />
+                      <div className={cn(
+                        "h-5 w-9 rounded-full transition-colors",
+                        form.allowEdits ? "bg-emerald-600" : "bg-slate-700"
+                      )}>
+                        <div className={cn(
+                          "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                          form.allowEdits ? "translate-x-4" : "translate-x-0.5"
+                        )} />
+                      </div>
+                    </div>
+                    <span className="text-sm text-slate-300">Allow others to edit</span>
+                  </label>
+                )}
               </div>
-              <span className="text-sm text-slate-300">Public song</span>
-            </label>
+            )}
           </div>
         </div>
       )}

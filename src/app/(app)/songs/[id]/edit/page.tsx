@@ -21,9 +21,12 @@ export default async function EditSongPage({ params }: PageProps) {
 
   if (!song) notFound()
 
+  const isOwner = session?.user.id === song.authorId
+  const isAdmin = session?.user.role === "ADMIN"
   const canEdit =
-    session?.user.role === "ADMIN" ||
-    (session?.user.role === "EDITOR" && song.authorId === session.user.id)
+    isAdmin ||
+    (session?.user.role === "EDITOR" && isOwner) ||
+    (song.isPublic && song.allowEdits)
 
   if (!canEdit) redirect(`/songs/${id}`)
 
@@ -31,6 +34,7 @@ export default async function EditSongPage({ params }: PageProps) {
     <SongForm
       songId={id}
       categories={categories}
+      isOwner={isOwner || isAdmin}
       initialData={{
         title: song.title,
         artist: song.artist ?? "",
@@ -40,6 +44,7 @@ export default async function EditSongPage({ params }: PageProps) {
         content: song.content,
         notes: song.notes ?? "",
         isPublic: song.isPublic,
+        allowEdits: song.allowEdits,
         categoryId: song.categoryId ?? "",
         tagIds: song.songTags.map((st) => st.tag.name),
       }}
