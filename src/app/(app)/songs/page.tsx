@@ -53,7 +53,7 @@ export default async function SongsPage({ searchParams }: PageProps) {
       take: limit,
       orderBy: { updatedAt: "desc" },
       include: {
-        author: { select: { id: true, name: true, email: true } },
+        author: { select: { id: true, name: true } },
         category: true,
         songTags: { include: { tag: true } },
       },

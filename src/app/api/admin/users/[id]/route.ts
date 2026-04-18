@@ -39,6 +39,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
+const DEFAULT_EDITOR_EMAIL = "editor@chordsheet.app"
+
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const result = await requireRole("ADMIN")
   if ("error" in result) return result.error
@@ -48,6 +50,19 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 
   if (id === session.user.id) {
     return NextResponse.json({ error: "Cannot delete your own account" }, { status: 400 })
+  }
+
+  // Transfer songs to the default editor before deleting
+  let editor = await prisma.user.findUnique({ where: { email: DEFAULT_EDITOR_EMAIL } })
+  if (!editor) {
+    editor = await prisma.user.findFirst({
+      where: { role: { in: ["EDITOR", "ADMIN"] }, id: { not: id } },
+      orderBy: { createdAt: "asc" },
+    })
+  }
+
+  if (editor) {
+    await prisma.song.updateMany({ where: { authorId: id }, data: { authorId: editor.id } })
   }
 
   await prisma.user.delete({ where: { id } })

@@ -58,15 +58,35 @@ function EnglishTerms() {
         </p>
       </Section>
 
-      <Section title="5. Your Rights">
-        <p>You may at any time:</p>
+      <Section title="5. Your Rights, Consent, and Responsibilities">
+        <p>
+          By creating an account, you grant ChordSheet your{" "}
+          <strong className="text-slate-300">voluntary and explicit consent</strong> to store your
+          name and email address solely for the purposes described in Section 3.
+        </p>
+        <p>
+          You retain full control over your personal data and may exercise your rights directly
+          from your account settings, without needing to contact us:
+        </p>
         <ul className="list-disc list-inside space-y-1 text-slate-400 pl-2">
-          <li>Request access to the personal data we hold about you</li>
-          <li>Request correction of inaccurate or outdated data</li>
-          <li>Request deletion of your account and all associated personal data</li>
-          <li>Withdraw the consent you gave at registration</li>
+          <li>
+            <strong className="text-slate-300">Update</strong> your name or email address at any
+            time from your <strong className="text-slate-300">Profile</strong> page.
+          </li>
+          <li>
+            <strong className="text-slate-300">Delete</strong> your account permanently from your
+            Profile page. Upon deletion, your songs are transferred to a platform editor account.
+          </li>
         </ul>
-        <p>To exercise any of these rights, contact us at the address in Section 8.</p>
+        <p>
+          ChordSheet is <strong className="text-slate-300">not responsible</strong> for the
+          accuracy of the information you provide, nor for any content you create or publish on the
+          platform. You accept full responsibility for the songs and content you upload or share.
+        </p>
+        <p>
+          The platform bears no liability for any consequences arising from account deletion,
+          content transfer, or discontinuation of the service.
+        </p>
       </Section>
 
       <Section title="6. Colombian Users — Ley 1581 de 2012">
@@ -169,15 +189,39 @@ function SpanishTerms() {
         </p>
       </Section>
 
-      <Section title="5. Tus Derechos">
-        <p>En cualquier momento puedes:</p>
+      <Section title="5. Tus Derechos, Consentimiento y Responsabilidades">
+        <p>
+          Al crear una cuenta, otorgas a ChordSheet tu{" "}
+          <strong className="text-slate-300">consentimiento voluntario y explícito</strong> para
+          almacenar tu nombre y correo electrónico únicamente con los fines descritos en la
+          Sección 3.
+        </p>
+        <p>
+          Conservas el control total sobre tus datos personales y puedes ejercer tus derechos
+          directamente desde la configuración de tu cuenta, sin necesidad de contactarnos:
+        </p>
         <ul className="list-disc list-inside space-y-1 text-slate-400 pl-2">
-          <li>Solicitar acceso a los datos personales que tenemos sobre ti</li>
-          <li>Solicitar la corrección de datos inexactos o desactualizados</li>
-          <li>Solicitar la eliminación de tu cuenta y todos los datos asociados</li>
-          <li>Revocar el consentimiento otorgado al momento del registro</li>
+          <li>
+            <strong className="text-slate-300">Actualizar</strong> tu nombre o correo electrónico
+            en cualquier momento desde tu página de{" "}
+            <strong className="text-slate-300">Perfil</strong>.
+          </li>
+          <li>
+            <strong className="text-slate-300">Eliminar</strong> tu cuenta de forma permanente
+            desde tu página de Perfil. Al eliminarla, tus canciones serán transferidas a una
+            cuenta editora de la plataforma.
+          </li>
         </ul>
-        <p>Para ejercer cualquiera de estos derechos, contáctanos en la dirección de la Sección 8.</p>
+        <p>
+          ChordSheet <strong className="text-slate-300">no se hace responsable</strong> de la
+          exactitud de la información que proporcionas, ni del contenido que creas o publicas en
+          la plataforma. Aceptas plena responsabilidad por las canciones y el contenido que subes
+          o compartes.
+        </p>
+        <p>
+          La plataforma no asume ninguna responsabilidad por las consecuencias derivadas de la
+          eliminación de cuentas, la transferencia de contenido o la discontinuación del servicio.
+        </p>
       </Section>
 
       <Section title="6. Usuarios en Colombia — Ley 1581 de 2012">

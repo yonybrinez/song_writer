@@ -25,12 +25,12 @@ interface Song {
   allowEdits: boolean
   version: number
   sourceId?: string | null
-  source?: { id: string; title: string; author: { name?: string | null; email: string } } | null
+  source?: { id: string; title: string; author: { name?: string | null } } | null
   createdAt: string
   updatedAt: string
   category?: { name: string; color: string } | null
   songTags: { tag: { name: string } }[]
-  author: { name?: string | null; email: string }
+  author: { name?: string | null }
 }
 
 interface SongViewPageProps {
@@ -164,7 +164,7 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
           <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-600/5 px-4 py-2.5 no-print">
             <GitFork className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
             <span className="text-xs text-amber-300">
-              Version {song.version} by {song.author.name || song.author.email.split("@")[0]}
+              Version {song.version}{song.author.name ? ` by ${song.author.name}` : ""}
             </span>
             {song.source && (
               <>
@@ -176,9 +176,11 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
                 >
                   {song.source.title}
                 </a>
-                <span className="text-xs text-amber-500">
-                  by {song.source.author.name || song.source.author.email.split("@")[0]}
-                </span>
+                {song.source.author.name && (
+                  <span className="text-xs text-amber-500">
+                    by {song.source.author.name}
+                  </span>
+                )}
               </>
             )}
           </div>

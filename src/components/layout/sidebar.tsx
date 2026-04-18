@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
-import { Music, LayoutGrid, Users, LogOut, ChevronRight, HelpCircle, X } from "lucide-react"
+import { Music, LayoutGrid, Users, LogOut, ChevronRight, HelpCircle, X, UserCircle } from "lucide-react"
 
 interface SidebarProps {
   userRole: string
@@ -18,6 +18,7 @@ const navItems = [
   { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["ADMIN"] },
   { href: "/admin/users", label: "Users", icon: Users, roles: ["ADMIN"] },
   { href: "/help", label: "Help", icon: HelpCircle, roles: ["VIEWER", "EDITOR", "ADMIN"] },
+  { href: "/profile", label: "Profile", icon: UserCircle, roles: ["VIEWER", "EDITOR", "ADMIN"] },
 ]
 
 export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps) {
@@ -87,7 +88,7 @@ export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps
       <div className="border-t border-slate-800 p-4">
         <div className="flex items-center gap-3 rounded-lg px-2 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600/30 border border-indigo-500/40 text-indigo-400 text-xs font-bold flex-shrink-0">
-            {(userName || userEmail).charAt(0).toUpperCase()}
+            {(userName || "U").charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-medium text-slate-200">{userName || "User"}</div>

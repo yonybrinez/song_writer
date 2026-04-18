@@ -34,7 +34,19 @@ export const transposeSchema = z.object({
   semitones: z.number().int().min(-12).max(12),
 })
 
+export const updateProfileSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().email("Invalid email address"),
+  currentPassword: z.string().optional(),
+})
+
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Password is required"),
+})
+
 export type LoginInput = z.infer<typeof loginSchema>
 export type RegisterInput = z.infer<typeof registerSchema>
 export type SongInput = z.infer<typeof songSchema>
 export type CategoryInput = z.infer<typeof categorySchema>
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>
+export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>

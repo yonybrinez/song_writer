@@ -15,13 +15,13 @@ interface SongCardProps {
     category?: { name: string; color: string } | null
     songTags: { tag: { name: string } }[]
     updatedAt: string | Date
-    author: { name?: string | null; email: string }
+    author: { name?: string | null }
   }
 }
 
 export function SongCard({ song }: SongCardProps) {
   const isVersion = song.version > 1 && !!song.sourceId
-  const authorLabel = song.author.name || song.author.email.split("@")[0]
+  const authorLabel = song.author.name || null
 
   return (
     <Link
@@ -79,7 +79,7 @@ export function SongCard({ song }: SongCardProps) {
           {formatDate(song.updatedAt)}
         </span>
         {song.tempo && <span>{song.tempo} BPM</span>}
-        <span className="ml-auto truncate">{authorLabel}</span>
+        {authorLabel && <span className="ml-auto truncate">{authorLabel}</span>}
       </div>
     </Link>
   )

@@ -54,7 +54,7 @@ export function UsersManager({
   }
 
   async function deleteUser(userId: string) {
-    if (!confirm("Delete this user and all their songs?")) return
+    if (!confirm("Delete this user? Their songs will be transferred to the default editor account.")) return
     setLoadingId(userId)
     try {
       const res = await fetch(`/api/admin/users/${userId}`, { method: "DELETE" })

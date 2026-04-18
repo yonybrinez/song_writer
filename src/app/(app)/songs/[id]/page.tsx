@@ -14,14 +14,14 @@ export default async function SongPage({ params }: PageProps) {
   const song = await prisma.song.findUnique({
     where: { id },
     include: {
-      author: { select: { id: true, name: true, email: true } },
+      author: { select: { id: true, name: true } },
       category: true,
       songTags: { include: { tag: true } },
       source: {
         select: {
           id: true,
           title: true,
-          author: { select: { name: true, email: true } },
+          author: { select: { name: true } },
         },
       },
     },
