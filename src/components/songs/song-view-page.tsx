@@ -12,6 +12,7 @@ import { toast } from "@/components/ui/toaster"
 import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy, GitFork, Music2, ExternalLink } from "lucide-react"
 import { LINK_TYPE_CONFIG, formatDisplayUrl, type LinkType } from "@/lib/link-utils"
 import { ClientDate } from "@/components/ui/client-date"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 interface Song {
   id: string
@@ -134,6 +135,8 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
           </div>
 
           <ExportMenu songId={song.id} songTitle={song.title} content={currentContent} />
+
+          {!isAuthenticated && <ThemeToggle />}
 
           {canCopy && (
             <Button size="sm" variant="secondary" onClick={handleCopy} loading={copying}>
