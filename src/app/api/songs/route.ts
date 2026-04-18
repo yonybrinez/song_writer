@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
     }
 
-    const { tagIds, ...data } = parsed.data
+    const { tagIds, referenceLinks, ...data } = parsed.data
 
     const tagRecords = await Promise.all(
       tagIds.map((name) =>
@@ -88,11 +88,20 @@ export async function POST(req: NextRequest) {
         songTags: {
           create: tagRecords.map((t) => ({ tagId: t.id })),
         },
+        referenceLinks: {
+          create: referenceLinks.map((link, i) => ({
+            url: link.url,
+            label: link.label ?? null,
+            type: link.type,
+            position: i,
+          })),
+        },
       },
       include: {
         author: { select: { id: true, name: true, email: true } },
         category: true,
         songTags: { include: { tag: true } },
+        referenceLinks: { orderBy: { position: "asc" as const } },
       },
     })
 

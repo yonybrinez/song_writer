@@ -9,12 +9,19 @@ import { SongEditor } from "./song-editor"
 import { TagInput } from "./tag-input"
 import { toast } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
-import { Save, ArrowLeft } from "lucide-react"
+import { detectLinkType, LINK_TYPE_CONFIG, type LinkType } from "@/lib/link-utils"
+import { Save, ArrowLeft, Plus, X, Link as LinkIcon } from "lucide-react"
 
 interface Category {
   id: string
   name: string
   color: string
+}
+
+interface ReferenceLink {
+  url: string
+  label: string
+  type: LinkType
 }
 
 interface SongFormProps {
@@ -31,6 +38,7 @@ interface SongFormProps {
     allowEdits: boolean
     categoryId: string
     tagIds: string[]
+    referenceLinks: ReferenceLink[]
   }
   categories: Category[]
   isOwner?: boolean
@@ -59,9 +67,32 @@ export function SongForm({ songId, initialData, categories, isOwner = true }: So
     allowEdits: initialData?.allowEdits ?? false,
     categoryId: initialData?.categoryId ?? "",
     tagIds: initialData?.tagIds ?? [],
+    referenceLinks: initialData?.referenceLinks ?? [] as ReferenceLink[],
   })
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState<"meta" | "lyrics">("lyrics")
+  const [newLinkUrl, setNewLinkUrl] = useState("")
+  const [newLinkLabel, setNewLinkLabel] = useState("")
+
+  function addLink() {
+    const url = newLinkUrl.trim()
+    if (!url) return
+    try { new URL(url) } catch { toast("Invalid URL", "error"); return }
+    const type = detectLinkType(url)
+    setForm((p) => ({
+      ...p,
+      referenceLinks: [...p.referenceLinks, { url, label: newLinkLabel.trim(), type }],
+    }))
+    setNewLinkUrl("")
+    setNewLinkLabel("")
+  }
+
+  function removeLink(index: number) {
+    setForm((p) => ({
+      ...p,
+      referenceLinks: p.referenceLinks.filter((_, i) => i !== index),
+    }))
+  }
 
   const updateContent = useCallback((content: string) => {
     setForm((prev) => ({ ...prev, content }))
@@ -87,6 +118,11 @@ export function SongForm({ songId, initialData, categories, isOwner = true }: So
         allowEdits: form.allowEdits,
         categoryId: form.categoryId || null,
         tagIds: form.tagIds,
+        referenceLinks: form.referenceLinks.map((l) => ({
+          url: l.url,
+          label: l.label || undefined,
+          type: l.type,
+        })),
       }
 
       const url = isEditing ? `/api/songs/${songId}` : "/api/songs"
@@ -219,6 +255,84 @@ export function SongForm({ songId, initialData, categories, isOwner = true }: So
               value={form.tagIds}
               onChange={(tags) => setForm((p) => ({ ...p, tagIds: tags }))}
             />
+
+            {/* Reference Links */}
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-slate-300">Reference Links</label>
+                {form.referenceLinks.length > 0 && (
+                  <span className="text-xs text-slate-500">
+                    {form.referenceLinks.length} link{form.referenceLinks.length !== 1 ? "s" : ""}
+                  </span>
+                )}
+              </div>
+
+              {form.referenceLinks.length > 0 && (
+                <div className="space-y-1.5">
+                  {form.referenceLinks.map((link, i) => {
+                    const cfg = LINK_TYPE_CONFIG[link.type] ?? LINK_TYPE_CONFIG.other
+                    return (
+                      <div
+                        key={i}
+                        className={cn(
+                          "flex items-center gap-2.5 rounded-lg border px-3 py-2",
+                          cfg.bg, cfg.border
+                        )}
+                      >
+                        <span className={`text-xs font-semibold flex-shrink-0 ${cfg.color}`}>
+                          {cfg.label}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-slate-300 truncate">
+                            {link.label || link.url}
+                          </p>
+                          {link.label && (
+                            <p className="text-xs text-slate-600 truncate">{link.url}</p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeLink(i)}
+                          className="text-slate-600 hover:text-red-400 transition-colors flex-shrink-0"
+                          title="Remove link"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {/* Add link row */}
+              <div className="flex gap-2">
+                <div className="relative flex-1 min-w-0">
+                  <LinkIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-600 pointer-events-none" />
+                  <input
+                    value={newLinkUrl}
+                    onChange={(e) => setNewLinkUrl(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addLink() } }}
+                    placeholder="YouTube, Spotify, SoundCloud, Drive…"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-800/60 pl-8 pr-3 py-2 text-sm text-slate-300 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  />
+                </div>
+                <input
+                  value={newLinkLabel}
+                  onChange={(e) => setNewLinkLabel(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addLink() } }}
+                  placeholder="Label"
+                  className="w-28 rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-slate-300 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={addLink}
+                  className="flex items-center justify-center h-9 w-9 rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-200 hover:border-indigo-500 transition-colors flex-shrink-0"
+                  title="Add link"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-slate-300">Notes (private)</label>

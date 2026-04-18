@@ -9,7 +9,8 @@ import { ExportMenu } from "./export-menu"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toaster"
-import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy, GitFork, Music2 } from "lucide-react"
+import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy, GitFork, Music2, ExternalLink } from "lucide-react"
+import { LINK_TYPE_CONFIG, formatDisplayUrl, type LinkType } from "@/lib/link-utils"
 import { ClientDate } from "@/components/ui/client-date"
 
 interface Song {
@@ -30,6 +31,7 @@ interface Song {
   updatedAt: string
   category?: { name: string; color: string } | null
   songTags: { tag: { name: string } }[]
+  referenceLinks: { id: string; url: string; label?: string | null; type: string }[]
   author: { name?: string | null }
 }
 
@@ -223,6 +225,40 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticate
           fontSize={fontSize}
           className="print:text-black"
         />
+
+        {/* Reference Links */}
+        {song.referenceLinks.length > 0 && (
+          <div className="mt-8 no-print">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+              References
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {song.referenceLinks.map((link) => {
+                const cfg = LINK_TYPE_CONFIG[link.type as LinkType] ?? LINK_TYPE_CONFIG.other
+                return (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={[
+                      "group flex items-center gap-2 rounded-lg border px-3 py-2 transition-all",
+                      "hover:brightness-125",
+                      cfg.bg,
+                      cfg.border,
+                    ].join(" ")}
+                  >
+                    <span className={`text-xs font-semibold ${cfg.color}`}>{cfg.label}</span>
+                    <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors max-w-[180px] truncate">
+                      {link.label || formatDisplayUrl(link.url)}
+                    </span>
+                    <ExternalLink className="h-3 w-3 text-slate-600 flex-shrink-0" />
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Notes — only visible to the owner */}
         {song.notes && canDelete && (

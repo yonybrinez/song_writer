@@ -11,6 +11,12 @@ export const registerSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
+export const referenceLinkSchema = z.object({
+  url: z.string().url("Invalid URL").max(2000),
+  label: z.string().max(100).optional(),
+  type: z.enum(["youtube", "spotify", "soundcloud", "drive", "other"]).default("other"),
+})
+
 export const songSchema = z.object({
   title: z.string().min(1, "Title is required").max(200),
   artist: z.string().max(200).optional(),
@@ -23,6 +29,7 @@ export const songSchema = z.object({
   allowEdits: z.boolean().default(false),
   categoryId: z.string().optional().nullable(),
   tagIds: z.array(z.string()).default([]),
+  referenceLinks: z.array(referenceLinkSchema).default([]),
 })
 
 export const categorySchema = z.object({

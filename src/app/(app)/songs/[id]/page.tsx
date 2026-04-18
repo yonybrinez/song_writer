@@ -17,6 +17,7 @@ export default async function SongPage({ params }: PageProps) {
       author: { select: { id: true, name: true } },
       category: true,
       songTags: { include: { tag: true } },
+      referenceLinks: { orderBy: { position: "asc" } },
       source: {
         select: {
           id: true,

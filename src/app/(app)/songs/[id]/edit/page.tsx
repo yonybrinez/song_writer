@@ -14,7 +14,10 @@ export default async function EditSongPage({ params }: PageProps) {
   const [song, categories] = await Promise.all([
     prisma.song.findUnique({
       where: { id },
-      include: { songTags: { include: { tag: true } } },
+      include: {
+        songTags: { include: { tag: true } },
+        referenceLinks: { orderBy: { position: "asc" } },
+      },
     }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ])
@@ -47,6 +50,11 @@ export default async function EditSongPage({ params }: PageProps) {
         allowEdits: song.allowEdits,
         categoryId: song.categoryId ?? "",
         tagIds: song.songTags.map((st) => st.tag.name),
+        referenceLinks: song.referenceLinks.map((rl) => ({
+          url: rl.url,
+          label: rl.label ?? "",
+          type: rl.type as "youtube" | "spotify" | "soundcloud" | "drive" | "other",
+        })),
       }}
     />
   )

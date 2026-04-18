@@ -8,6 +8,7 @@ const SONG_INCLUDE = {
   author: { select: { id: true, name: true, email: true } },
   category: true,
   songTags: { include: { tag: true } },
+  referenceLinks: { orderBy: { position: "asc" as const } },
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -49,7 +50,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
     }
 
-    const { tagIds, ...data } = parsed.data
+    const { tagIds, referenceLinks, ...data } = parsed.data
 
     // Non-owners cannot change isPublic or allowEdits
     if (!isOwner && !isAdmin) {
@@ -68,6 +69,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     )
 
     await prisma.songTag.deleteMany({ where: { songId: id } })
+    await prisma.referenceLink.deleteMany({ where: { songId: id } })
 
     const updated = await prisma.song.update({
       where: { id },
@@ -75,6 +77,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         ...data,
         songTags: {
           create: tagRecords.map((t) => ({ tagId: t.id })),
+        },
+        referenceLinks: {
+          create: referenceLinks.map((link, i) => ({
+            url: link.url,
+            label: link.label ?? null,
+            type: link.type,
+            position: i,
+          })),
         },
       },
       include: SONG_INCLUDE,

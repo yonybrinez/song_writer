@@ -44,31 +44,46 @@ model Tag {
 }
 
 model Song {
-  id            String    @id @default(cuid())
-  title         String
-  artist        String?
-  key           String?
-  tempo         Int?
-  timeSignature String?
-  content       String    @default("")
-  notes         String?
-  isPublic      Boolean   @default(false)
-  allowEdits    Boolean   @default(false)
-  version       Int       @default(1)
-  sourceId      String?
-  authorId      String
-  categoryId    String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  source        Song?     @relation("SongVersions", fields: [sourceId], references: [id], onDelete: SetNull)
-  copies        Song[]    @relation("SongVersions")
-  songTags      SongTag[]
+  id             String          @id @default(cuid())
+  title          String
+  artist         String?
+  key            String?
+  tempo          Int?
+  timeSignature  String?
+  content        String          @default("")
+  notes          String?
+  isPublic       Boolean         @default(false)
+  allowEdits     Boolean         @default(false)
+  version        Int             @default(1)
+  sourceId       String?
+  authorId       String
+  categoryId     String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  author         User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  source         Song?           @relation("SongVersions", fields: [sourceId], references: [id], onDelete: SetNull)
+  copies         Song[]          @relation("SongVersions")
+  songTags       SongTag[]
+  referenceLinks ReferenceLink[]
 
   @@index([authorId])
   @@index([categoryId])
   @@map("songs")
+}
+
+model ReferenceLink {
+  id        String   @id @default(cuid())
+  songId    String
+  url       String
+  label     String?
+  type      String   @default("other")
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@index([songId])
+  @@map("reference_links")
 }
 
 model SongTag {
