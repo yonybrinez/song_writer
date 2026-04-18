@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { SongViewPage } from "@/components/songs/song-view-page"
 
 interface PageProps {
@@ -29,12 +29,21 @@ export default async function SongPage({ params }: PageProps) {
 
   if (!song) notFound()
 
-  const isOwner = session?.user.id === song.authorId
-  const isAdmin = session?.user.role === "ADMIN"
+  // Private songs require authentication
+  if (!song.isPublic) {
+    if (!session?.user) redirect("/login")
+    const isOwner = session.user.id === song.authorId
+    const isAdmin = session.user.role === "ADMIN"
+    if (!isOwner && !isAdmin) notFound()
+  }
 
-  const canEdit = isOwner || isAdmin || (song.isPublic && song.allowEdits)
-  const canDelete = isOwner || isAdmin
-  const canCopy = !isOwner && song.isPublic
+  const isAuthenticated = !!session?.user
+  const isOwner = session?.user?.id === song.authorId
+  const isAdmin = session?.user?.role === "ADMIN"
+
+  const canEdit = isAuthenticated && (isOwner || isAdmin || (song.isPublic && song.allowEdits))
+  const canDelete = isAuthenticated && (isOwner || isAdmin)
+  const canCopy = isAuthenticated && !isOwner && song.isPublic
 
   return (
     <SongViewPage
@@ -46,6 +55,7 @@ export default async function SongPage({ params }: PageProps) {
       canEdit={canEdit}
       canDelete={canDelete}
       canCopy={canCopy}
+      isAuthenticated={isAuthenticated}
     />
   )
 }

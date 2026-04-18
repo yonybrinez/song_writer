@@ -9,7 +9,7 @@ import { ExportMenu } from "./export-menu"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toaster"
-import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy, GitFork } from "lucide-react"
+import { ArrowLeft, Edit, Trash2, Minus, Plus, Copy, GitFork, Music2 } from "lucide-react"
 import { ClientDate } from "@/components/ui/client-date"
 
 interface Song {
@@ -38,9 +38,10 @@ interface SongViewPageProps {
   canEdit: boolean
   canDelete: boolean
   canCopy: boolean
+  isAuthenticated: boolean
 }
 
-export function SongViewPage({ song, canEdit, canDelete, canCopy }: SongViewPageProps) {
+export function SongViewPage({ song, canEdit, canDelete, canCopy, isAuthenticated }: SongViewPageProps) {
   const router = useRouter()
   const [currentContent, setCurrentContent] = useState(song.content)
   const [currentKey, setCurrentKey] = useState(song.key ?? undefined)
@@ -102,12 +103,14 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy }: SongViewPage
             {song.artist && <p className="text-xs text-slate-500">{song.artist}</p>}
           </div>
 
-          <TransposeControl
-            songId={song.id}
-            originalKey={currentKey}
-            onTransposed={handleTransposed}
-            canSave={canEdit}
-          />
+          {isAuthenticated && (
+            <TransposeControl
+              songId={song.id}
+              originalKey={currentKey}
+              onTransposed={handleTransposed}
+              canSave={canEdit}
+            />
+          )}
 
           {/* Font size */}
           <div className="flex items-center gap-1 rounded-lg border border-slate-700 overflow-hidden">
@@ -224,6 +227,33 @@ export function SongViewPage({ song, canEdit, canDelete, canCopy }: SongViewPage
           <div className="mt-8 rounded-lg border border-slate-800 bg-slate-900/50 p-4 no-print">
             <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Private notes</p>
             <p className="text-sm text-slate-400 whitespace-pre-wrap">{song.notes}</p>
+          </div>
+        )}
+
+        {/* Register banner — shown to unauthenticated visitors */}
+        {!isAuthenticated && (
+          <div className="mt-12 mb-6 rounded-xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/60 via-slate-900/80 to-slate-900/60 p-6 no-print">
+            <div className="flex flex-col sm:flex-row items-center gap-5">
+              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500/15 border border-indigo-500/25">
+                <Music2 className="h-5 w-5 text-indigo-400" />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-sm font-semibold text-slate-100">
+                  Build your own song library
+                </h3>
+                <p className="mt-0.5 text-sm text-slate-400">
+                  Create an account to write, edit, and share songs with chords — completely free.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <Link href="/login">
+                  <Button size="sm" variant="secondary">Log in</Button>
+                </Link>
+                <Link href="/register">
+                  <Button size="sm">Sign up free</Button>
+                </Link>
+              </div>
+            </div>
           </div>
         )}
       </div>
