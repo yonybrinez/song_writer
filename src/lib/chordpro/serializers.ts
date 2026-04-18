@@ -86,8 +86,8 @@ export function toHtml(
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: #0f172a;
-    color: #e2e8f0;
+    background: #ffffff;
+    color: #1e293b;
     font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
     font-size: 16px;
     line-height: 1.6;
@@ -95,31 +95,26 @@ export function toHtml(
     max-width: 900px;
     margin: 0 auto;
   }
-  h1 { font-size: 2rem; color: #f1f5f9; margin-bottom: 0.25rem; font-family: sans-serif; }
-  .meta { color: #94a3b8; font-family: sans-serif; margin-bottom: 2rem; }
+  h1 { font-size: 2rem; color: #0f172a; margin-bottom: 0.25rem; font-family: sans-serif; }
+  .meta { color: #64748b; font-family: sans-serif; margin-bottom: 2rem; }
   .section-label {
-    color: #94a3b8;
+    color: #64748b;
     font-style: italic;
     font-size: 0.9em;
     margin: 1.5rem 0 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-family: sans-serif;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.25rem;
   }
   .chord-line { display: flex; flex-wrap: wrap; margin-bottom: 0.125rem; }
   .token { display: inline-flex; flex-direction: column; }
-  .chord { color: #818cf8; font-weight: 700; font-size: 0.85em; min-height: 1.2em; white-space: pre; }
+  .chord { color: #4f46e5; font-weight: 700; font-size: 0.85em; min-height: 1.2em; white-space: pre; }
   .chord-empty { min-height: 1.2em; }
-  .lyric { color: #e2e8f0; white-space: pre; }
-  .lyric-only { color: #e2e8f0; margin-bottom: 0.125rem; }
+  .lyric { color: #1e293b; white-space: pre; }
+  .lyric-only { color: #1e293b; margin-bottom: 0.125rem; }
   .empty-line { height: 1rem; }
-  @media print {
-    body { background: white; color: #1e293b; }
-    h1 { color: #0f172a; }
-    .chord { color: #4f46e5; }
-    .lyric, .lyric-only { color: #1e293b; }
-    .section-label { color: #64748b; }
-  }
 </style>
 </head>
 <body>

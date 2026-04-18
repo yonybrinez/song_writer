@@ -30,47 +30,22 @@ export function ExportMenu({ songId, songTitle, content }: ExportMenuProps) {
     setOpen(false)
     try {
       if (format === "pdf") {
-        // Client-side PDF via html2canvas + jsPDF
         const htmlRes = await fetch(`/api/songs/${songId}/export?format=html`)
         if (!htmlRes.ok) throw new Error()
         const htmlContent = await htmlRes.text()
 
-        const { default: jsPDF } = await import("jspdf")
-        const { default: html2canvas } = await import("html2canvas")
-
-        const container = document.createElement("div")
-        container.style.cssText = "position:fixed;left:-9999px;top:0;width:900px;background:#0f172a;"
-        container.innerHTML = htmlContent
-        document.body.appendChild(container)
-
-        const canvas = await html2canvas(container, {
-          backgroundColor: "#0f172a",
-          scale: 2,
-          useCORS: true,
-          logging: false,
+        const win = window.open("", "_blank")
+        if (!win) throw new Error("popup blocked")
+        win.document.open()
+        win.document.write(htmlContent)
+        win.document.close()
+        win.addEventListener("load", () => {
+          setTimeout(() => {
+            win.focus()
+            win.print()
+          }, 250)
         })
-
-        document.body.removeChild(container)
-
-        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
-        const imgWidth = 190
-        const imgHeight = (canvas.height * imgWidth) / canvas.width
-        const pages = Math.ceil(imgHeight / 277)
-
-        for (let i = 0; i < pages; i++) {
-          if (i > 0) pdf.addPage()
-          pdf.addImage(
-            canvas.toDataURL("image/png"),
-            "PNG",
-            10,
-            10 - i * 277,
-            imgWidth,
-            imgHeight
-          )
-        }
-
-        pdf.save(`${songTitle.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.pdf`)
-        toast("PDF exported", "success")
+        toast("Print dialog opened — save as PDF", "success")
       } else {
         const res = await fetch(
           `/api/songs/${songId}/export?format=${format === "html" ? "html-download" : format}`
