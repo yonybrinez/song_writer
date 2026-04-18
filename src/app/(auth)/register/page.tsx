@@ -6,20 +6,26 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { registerSchema, type RegisterInput } from "@/lib/validations"
 import { Music } from "lucide-react"
 
+const registerWithConsentSchema = registerSchema.extend({
+  terms: z.literal(true, { message: "You must accept the Terms & Conditions to continue." }),
+})
+type RegisterWithConsentInput = z.infer<typeof registerWithConsentSchema>
+
 export default function RegisterPage() {
   const router = useRouter()
   const [error, setError] = useState("")
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterWithConsentInput>({
+    resolver: zodResolver(registerWithConsentSchema),
   })
 
-  async function onSubmit(data: RegisterInput) {
+  async function onSubmit(data: RegisterWithConsentInput) {
     setError("")
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -90,6 +96,34 @@ export default function RegisterPage() {
               autoComplete="new-password"
               error={errors.password?.message}
             />
+
+            {/* Terms consent */}
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                {...register("terms")}
+                type="checkbox"
+                className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border border-slate-600 bg-slate-800 accent-indigo-600 cursor-pointer"
+              />
+              <span className="text-xs text-slate-400 leading-relaxed">
+                I have read and accept the{" "}
+                <Link
+                  href="/terms"
+                  target="_blank"
+                  className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2"
+                >
+                  Terms & Conditions
+                </Link>{" "}
+                and authorize the processing of my personal data (name and email) as described
+                therein.{" "}
+                <span className="text-slate-500">
+                  — Autorizo el tratamiento de mis datos personales conforme a la Política de
+                  Privacidad.
+                </span>
+              </span>
+            </label>
+            {errors.terms && (
+              <p className="text-xs text-red-400">{errors.terms.message}</p>
+            )}
 
             {error && (
               <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">

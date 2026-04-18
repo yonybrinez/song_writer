@@ -8,7 +8,10 @@ export default auth((req) => {
   const { nextUrl, auth: session } = req
 
   const isLoggedIn = !!session?.user
-  const isAuthPage = nextUrl.pathname.startsWith("/login") || nextUrl.pathname.startsWith("/register")
+  const isAuthPage =
+    nextUrl.pathname.startsWith("/login") ||
+    nextUrl.pathname.startsWith("/register") ||
+    nextUrl.pathname.startsWith("/terms")
   const isApiAuth = nextUrl.pathname.startsWith("/api/auth")
   const isSongView = SONG_VIEW_RE.test(nextUrl.pathname)
 

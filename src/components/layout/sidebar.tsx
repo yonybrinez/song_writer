@@ -73,6 +73,16 @@ export function Sidebar({ userRole, userName, userEmail, onClose }: SidebarProps
         </div>
       </nav>
 
+      {/* Footer */}
+      <div className="px-5 pb-2">
+        <Link
+          href="/terms"
+          className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+        >
+          Terms & Conditions
+        </Link>
+      </div>
+
       {/* User */}
       <div className="border-t border-slate-800 p-4">
         <div className="flex items-center gap-3 rounded-lg px-2 py-2">
